@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NKv1.9 ProxyAim VIP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0c14;
+            --card-bg: rgba(18, 22, 36, 0.95);
+            --cyan: #00f3ff;
+            --pink: #ff0055;
+            --yellow: #ffe600;
+            --green: #00ff66;
+            --text: #e0e6ed;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0; padding: 0;
+            font-family: 'Rajdhani', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.05) 0%, transparent 80%),
+                linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8));
+        }
+
+        .menu-container {
+            width: 100%;
+            max-width: 380px;
+            background: var(--card-bg);
+            border: 1px solid var(--cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lang-switch {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--cyan);
+            color: #fff;
+            padding: 3px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .lang-btn.active {
+            background: var(--cyan);
+            color: #000;
+            font-weight: bold;
+        }
+
+        .menu-header {
+            text-align: center;
+            border-bottom: 2px solid rgba(0, 243, 255, 0.3);
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .menu-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            color: var(--cyan);
+            text-shadow: 0 0 10px var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--pink);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        .warning-box {
+            background: rgba(255, 0, 85, 0.15);
+            border: 1px dashed var(--pink);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #ffb3c1;
+            line-height: 1.4;
+        }
+
+        .warning-box strong {
+            color: var(--pink);
+            display: block;
+            margin-bottom: 3px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+        }
+
+        .key-lock-screen {
+            text-align: center;
+            padding: 5px 0;
+        }
+
+        .key-lock-screen h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--pink);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .key-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            border-radius: 6px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 15px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .btn-submit {
+            background: var(--cyan);
+            color: #000;
+        }
+
+        .btn-link {
+            background: var(--pink);
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            line-height: 20px;
+        }
+
+        #main-menu {
+            display: none;
+        }
+
+        .status-box {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid var(--green);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .status-box .status-text {
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            color: var(--pink);
+            margin: 12px 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .toggle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-item span {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #2a354d;
+            transition: .3s;
+            border-radius: 22px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px; width: 16px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .fov-box {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .fov-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .fov-slider {
+            width: 100%;
+            accent-color: var(--cyan);
+            cursor: pointer;
+        }
+
+        .credit-footer {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+            color: #8a99ad;
+            font-weight: 700;
+        }
+
+        .credit-footer span { color: var(--cyan); }
+    </style>
+</head>
+<body>
+
+<div class="menu-container">
+    <div class="lang-switch">
+        <button class="lang-btn active" id="btn-vi" onclick="setLanguage('vi')">Tiếng Việt</button>
+        <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">English</button>
+    </div>
+
+    <div class="menu-header">
+        <h1>PROXYAIM MENU</h1>
+        <span class="version-badge">NKv1.9</span>
+    </div>
+
+    <div class="warning-box" id="txt-warning">
+        <strong>⚠️ THÔNG BÁO CẨN TRỌNG:</strong>
+        Hiện tại Gà tuất đang quét rất căng nên việc cài đặt & bật menu khá phức tạp. Vui lòng xem kỹ video hướng dẫn của Ad trước khi dùng!
+    </div>
+
+    <div id="lock-menu" class="key-lock-screen">
+        <h2 id="txt-expired-title">🔒 KÍCH HOẠT KEY (1 GIỜ)</h2>
+        <p id="txt-expired-msg" style="font-size:12px; color:#aaa; margin-bottom:12px;">Mỗi Key chỉ có thời hạn 1h. Bắt buộc lấy Key từ trang laykey.html!</p>
+        
+        <input type="text" id="key-input" class="key-input" placeholder="Dán Key dạng nK_****** tại đây..." autocomplete="off">
+        
+        <button class="btn-action btn-submit" onclick="checkKey()" id="btn-active">KÍCH HOẠT MENU</button>
+        <a href="laykey.html" class="btn-action btn-link" id="btn-getkey">VƯỢT LINK LẤY KEY MỚI</a>
+    </div>
+
+    <div id="main-menu">
+        <div class="status-box">
+            <span id="txt-status-label">🔍 Trạng thái:</span> <span class="status-text" id="status-text">Đã kết nối Free Fire (Sẵn sàng)</span>
+        </div>
+
+        <div class="section-title" id="txt-sec-aim">🎯 Tính Năng Aimbot</div>
+
+        <div class="toggle-item">
+            <span id="txt-aimbot">Aimbot Lock Target</span>
+            <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-item">
+            <span id="txt-aimsilent">Aim Silent (Bắn Ẩn)</span>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="fov-box">
+            <div class="fov-header">
+                <span id="txt-fov">Phạm vi FOV</span>
+                <span id="fov-val" style="color: var(--cyan);">100%</span>
+            </div>
+            <input type="range" min="1" max="200" value="100" class="fov-slider" id="fov-range" oninput="document.getElementById('fov-val').innerText = this.value + '%'">
+        </div>
+
+        <div class="section-title" id="txt-sec-esp">👁️ Tính Năng ESP X-Ray</div>
+
+        <div class="toggle-item">
+            <span id="txt-espline">ESP Line (Đường Dẫn)</span>
+            <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-item">
+            <span id="txt-espskeleton">ESP Skeleton (Khung Xương)</span>
+            <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-item">
+            <span id="txt-espbox">ESP Box (Hộp Địch)</span>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="credit-footer">
+        <span id="txt-credit">Được phát triển bởi</span> <span>@bí ẩn</span>
+    </div>
+</div>
+
+<script>
+    let currentLang = 'vi';
+
+    const translations = {
+        vi: {
+            warning: "<strong>⚠️ THÔNG BÁO CẨN TRỌNG:</strong>Hiện tại Garena đang quét rất căng nên việc cài đặt & bật menu khá phức tạp. Vui lòng xem kỹ video hướng dẫn của Ad trước khi dùng!",
+            statusLabel: "🔍 Trạng thái:",
+            statusText: "Đã kết nối Free Fire (Sẵn sàng)",
+            secAim: "🎯 Tính Năng Aimbot",
+            aimbot: "Aimbot Lock Target",
+            aimsilent: "Aim Silent (Bắn Ẩn)",
+            fov: "Phạm vi FOV",
+            secEsp: "👁️️ Tính Năng ESP X-Ray",
+            espline: "ESP Line (Đường Dẫn)",
+            espskeleton: "ESP Skeleton (Khung Xương)",
+            espbox: "ESP Box (Hộp Địch)",
+            expiredTitle: "🔒 KÍCH HOẠT KEY (1 GIỜ)",
+            expiredMsg: "Mỗi Key chỉ có thời hạn 1h. Bắt buộc lấy Key từ trang laykey.html!",
+            activeBtn: "KÍCH HOẠT MENU",
+            getKeyBtn: "VƯỢT LINK LẤY KEY MỚI",
+            credit: "Được phát triển bởi",
+            phInput: "Dán Key dạng nK_****** tại đây..."
+        },
+        en: {
+            warning: "<strong>⚠️ WARNING NOTICE:</strong>Garena anti-cheat is active. Please carefully watch Admin's tutorial video before installation!",
+            statusLabel: "🔍 Status:",
+            statusText: "Free Fire Connected (Ready)",
+            secAim: "🎯 Aimbot Features",
+            aimbot: "Aimbot Lock Target",
+            aimsilent: "Aim Silent",
+            fov: "FOV Range",
+            secEsp: "👁 ESP X-Ray Features",
+            espline: "ESP Line",
+            espskeleton: "ESP Skeleton",
+            espbox: "ESP Box",
+            expiredTitle: "🔒 ACTIVATE KEY (1 HOUR)",
+            expiredMsg: "Key is valid for 1 hour. Must generate from laykey.html!",
+            activeBtn: "ACTIVATE MENU",
+            getKeyBtn: "GET NEW KEY VIA SHORTENER",
+            credit: "Developed by",
+            phInput: "Paste Key nK_****** here..."
+        }
+    };
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('btn-vi').classList.toggle('active', lang === 'vi');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+        const t = translations[lang];
+        document.getElementById('txt-warning').innerHTML = t.warning;
+        document.getElementById('txt-status-label').innerText = t.statusLabel;
+        document.getElementById('txt-sec-aim').innerText = t.secAim;
+        document.getElementById('txt-aimbot').innerText = t.aimbot;
+        document.getElementById('txt-aimsilent').innerText = t.aimsilent;
+        document.getElementById('txt-fov').innerText = t.fov;
+        document.getElementById('txt-sec-esp').innerText = t.secEsp;
+        document.getElementById('txt-espline').innerText = t.espline;
+        document.getElementById('txt-espskeleton').innerText = t.espskeleton;
+        document.getElementById('txt-espbox').innerText = t.espbox;
+        document.getElementById('txt-expired-title').innerText = t.expiredTitle;
+        document.getElementById('txt-expired-msg').innerText = t.expiredMsg;
+        document.getElementById('btn-active').innerText = t.activeBtn;
+        document.getElementById('btn-getkey').innerText = t.getKeyBtn;
+        document.getElementById('txt-credit').innerText = t.credit;
+        document.getElementById('key-input').placeholder = t.phInput;
+    }
+
+    function checkKey() {
+        const inputKey = document.getElementById('key-input').value.trim();
+        const savedKey = localStorage.getItem("nk_active_key");
+        const expireTime = localStorage.getItem("nk_key_expire");
+        const currentTime = new Date().getTime();
+
+        if (!savedKey || inputKey !== savedKey) {
+            alert(currentLang === 'vi' 
+                ? "❌ Key không tồn tại hoặc bị sai! Nhập bừa cho vào thùng rác. Vui lòng bấm vượt link lấy key chính chủ." 
+                : "❌ Invalid Key! Please generate key from laykey.html!");
+            return;
+        }
+
+        if (currentTime > parseInt(expireTime)) {
+            alert(currentLang === 'vi' 
+                ? "⏰ Key của bạn đã HẾT HẠN (Mỗi key chỉ dùng được 1 giờ). Vui lòng vượt link lấy Key mới!" 
+                : "⏰ Key EXPIRED (1 hour limit)! Please get a new key.");
+            return;
+        }
+
+        alert(currentLang === 'vi' ? "✅ Kích hoạt Key 1h thành công! Chúc bạn chơi game vui vẻ." : "✅ Key activated!");
+        document.getElementById('lock-menu').style.display = 'none';
+        document.getElementById('main-menu').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
